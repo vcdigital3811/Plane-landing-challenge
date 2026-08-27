@@ -59,7 +59,7 @@ button{font-family:var(--fd);cursor:pointer;}
 #topCenter b{color:var(--cyan);font-size:15px;margin:0 4px;}
 #taxiDirective{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(12,19,27,0.9);border:2px solid var(--amber);padding:10px 24px;border-radius:30px;color:var(--amber);font-size:16px;font-weight:700;display:none;text-align:center;width:90%;max-width:400px;}
 
-/* TOUCH CONTROLS OVERLAY - ONLY SHOWN ON TOUCH DEVICES */
+/* TOUCH CONTROLS OVERLAY */
 #touchControls{position:fixed;inset:0;z-index:16;display:none;pointer-events:none;}
 
 @media (pointer: coarse) {
@@ -84,7 +84,6 @@ button{font-family:var(--fd);cursor:pointer;}
 .card-actions button{font-weight:700;padding:10px 20px;border-radius:6px;border:1px solid var(--border);background:var(--panel2);color:var(--text);}
 .card-actions button.primary{background:var(--amber);color:#000;border:none;}
 
-/* MOBILE RESPONSIVE ADAPTATIONS */
 @media (max-width: 768px) {
   .menu-top{flex-direction:column;}
   .hero{width:100%;border-right:none;border-bottom:1px solid var(--border);padding:16px;}
@@ -122,7 +121,7 @@ button{font-family:var(--fd);cursor:pointer;}
     </div>
     
     <div class="center-stage">
-      <div class="fleet-head"><h2>Select Aircraft Fleet (12 Models)</h2></div>
+      <div class="fleet-head"><h2>Select Aircraft Fleet (24 Models)</h2></div>
       <div class="fleet-list" id="fleetList"></div>
       
       <div class="leaderboard-panel">
@@ -183,20 +182,32 @@ button{font-family:var(--fd);cursor:pointer;}
 const RUNWAY_LENGTH = 2500, RUNWAY_WIDTH = 45;
 const SPAWN_DIST = 3200, SPAWN_ALT = 200;
 
-/* Comprehensive Fleet Array */
+/* Fleet Array */
 const AIRCRAFT = [
- {id:'a220',code:'A220',name:'Airbus A220-300',cat:'REGIONAL JET',length:38.7,span:35.1,fuseR:1.75,engines:2,engineLoc:'wing',vapp:132,accent:0x00A896},
- {id:'a330',code:'A330',name:'Airbus A330-900',cat:'WIDE-BODY',length:63.6,span:64.0,fuseR:2.8,engines:2,engineLoc:'wing',vapp:142,accent:0x028090},
- {id:'a340',code:'A340',name:'Airbus A340-600',cat:'QUAD-JET WIDE-BODY',length:75.3,span:63.4,fuseR:2.8,engines:4,engineLoc:'wing',vapp:146,accent:0x05668D},
- {id:'a350',code:'A350',name:'Airbus A350-1000',cat:'WIDE-BODY',length:73.7,span:64.7,fuseR:3.0,engines:2,engineLoc:'wing',vapp:144,accent:0x3A86FF},
- {id:'beluga',code:'BELUGA',name:'Airbus Beluga XL',cat:'SUPER TRANSPORTER',length:63.1,span:60.3,fuseR:4.4,engines:2,engineLoc:'wing',hump:true,vapp:140,accent:0xFFBE0B},
- {id:'b707',code:'B707',name:'Boeing 707-320',cat:'CLASSIC QUAD-JET',length:46.6,span:44.4,fuseR:1.9,engines:4,engineLoc:'wing',vapp:140,accent:0x8338EC},
- {id:'b717',code:'B717',name:'Boeing 717-200',cat:'REAR-ENGINE TWIN',length:37.8,span:28.4,fuseR:1.7,engines:2,engineLoc:'rear',ttail:true,vapp:134,accent:0xFB5607},
- {id:'b727',code:'B727',name:'Boeing 727-200',cat:'TRI-JET T-TAIL',length:46.7,span:32.9,fuseR:1.8,engines:3,engineLoc:'trijet',ttail:true,vapp:136,accent:0xFF006E},
- {id:'b747',code:'B747',name:'Boeing 747-8i',cat:'JUMBO JET',length:76.3,span:68.4,fuseR:3.3,engines:4,engineLoc:'wing',jumboHump:true,vapp:150,accent:0xD00000},
- {id:'b757',code:'B757',name:'Boeing 757-300',cat:'NARROW-BODY LONG',length:54.4,span:38.0,fuseR:1.9,engines:2,engineLoc:'wing',vapp:138,accent:0x38B000},
- {id:'b767',code:'B767',name:'Boeing 767-400ER',cat:'WIDE-BODY',length:61.3,span:51.9,fuseR:2.5,engines:2,engineLoc:'wing',vapp:140,accent:0x0072BB},
- {id:'b787',code:'B787',name:'Boeing 787-10',cat:'DREAMLINER',length:68.3,span:60.1,fuseR:2.9,engines:2,engineLoc:'wing',vapp:143,accent:0x118AB2}
+ {id:'a220',code:'A220',name:'Airbus A220-300',cat:'REGIONAL JET',type:'liner',length:38.7,span:35.1,fuseR:1.75,engines:2,engineLoc:'wing',vapp:132,accent:0x00A896},
+ {id:'a320',code:'A320',name:'Airbus A320-200',cat:'NARROW-BODY',type:'liner',length:37.5,span:35.8,fuseR:1.95,engines:2,engineLoc:'wing',vapp:135,accent:0x0077B6},
+ {id:'a330',code:'A330',name:'Airbus A330-900',cat:'WIDE-BODY',type:'liner',length:63.6,span:64.0,fuseR:2.8,engines:2,engineLoc:'wing',vapp:142,accent:0x028090},
+ {id:'a340',code:'A340',name:'Airbus A340-600',cat:'QUAD-JET WIDE-BODY',type:'liner',length:75.3,span:63.4,fuseR:2.8,engines:4,engineLoc:'wing',vapp:146,accent:0x05668D},
+ {id:'a350',code:'A350',name:'Airbus A350-1000',cat:'WIDE-BODY',type:'liner',length:73.7,span:64.7,fuseR:3.0,engines:2,engineLoc:'wing',vapp:144,accent:0x3A86FF},
+ {id:'a380',code:'A380',name:'Airbus A380-800',cat:'SUPER JUMBO',type:'liner',length:72.7,span:79.8,fuseR:3.7,engines:4,engineLoc:'wing',doubleDeck:true,vapp:148,accent:0x4361EE},
+ {id:'beluga',code:'BELUGA',name:'Airbus Beluga XL',cat:'SUPER TRANSPORTER',type:'liner',length:63.1,span:60.3,fuseR:4.4,engines:2,engineLoc:'wing',hump:true,vapp:140,accent:0xFFBE0B},
+ {id:'b707',code:'B707',name:'Boeing 707-320',cat:'CLASSIC QUAD-JET',type:'liner',length:46.6,span:44.4,fuseR:1.9,engines:4,engineLoc:'wing',vapp:140,accent:0x8338EC},
+ {id:'b717',code:'B717',name:'Boeing 717-200',cat:'REAR-ENGINE TWIN',type:'liner',length:37.8,span:28.4,fuseR:1.7,engines:2,engineLoc:'rear',ttail:true,vapp:134,accent:0xFB5607},
+ {id:'b727',code:'B727',name:'Boeing 727-200',cat:'TRI-JET T-TAIL',type:'liner',length:46.7,span:32.9,fuseR:1.8,engines:3,engineLoc:'trijet',ttail:true,vapp:136,accent:0xFF006E},
+ {id:'b737',code:'B737',name:'Boeing 737-800',cat:'NARROW-BODY',type:'liner',length:39.5,span:35.8,fuseR:1.88,engines:2,engineLoc:'wing',vapp:138,accent:0x023E8A},
+ {id:'b747',code:'B747',name:'Boeing 747-8i',cat:'JUMBO JET',type:'liner',length:76.3,span:68.4,fuseR:3.3,engines:4,engineLoc:'wing',jumboHump:true,vapp:150,accent:0xD00000},
+ {id:'b757',code:'B757',name:'Boeing 757-300',cat:'NARROW-BODY LONG',type:'liner',length:54.4,span:38.0,fuseR:1.9,engines:2,engineLoc:'wing',vapp:138,accent:0x38B000},
+ {id:'b767',code:'B767',name:'Boeing 767-400ER',cat:'WIDE-BODY',type:'liner',length:61.3,span:51.9,fuseR:2.5,engines:2,engineLoc:'wing',vapp:140,accent:0x0072BB},
+ {id:'b777',code:'B777',name:'Boeing 777-300ER',cat:'FLAGSHIP WIDE-BODY',type:'liner',length:73.9,span:64.8,fuseR:3.1,engines:2,engineLoc:'wing',vapp:145,accent:0x1D3557},
+ {id:'b787',code:'B787',name:'Boeing 787-10',cat:'DREAMLINER',type:'liner',length:68.3,span:60.1,fuseR:2.9,engines:2,engineLoc:'wing',vapp:143,accent:0x118AB2},
+ {id:'b2',code:'B2',name:'Northrop B-2 Spirit',cat:'STEALTH BOMBER',type:'stealth',length:21.0,span:52.4,fuseR:1.2,engines:4,vapp:140,accent:0x2B2D42},
+ {id:'dhc6',code:'DHC6',name:'DHC-6 Twin Otter',cat:'STOL UTILITY',type:'prop',length:15.8,span:19.8,fuseR:1.1,engines:2,engineLoc:'wing',highWing:true,vapp:80,accent:0xE76F51},
+ {id:'c150',code:'C150',name:'Cessna 150',cat:'LIGHT TRAINER',type:'prop',length:7.3,span:10.2,fuseR:0.7,engines:1,engineLoc:'nose',highWing:true,vapp:60,accent:0x2A9D8F},
+ {id:'c170',code:'C170',name:'Cessna 170',cat:'LIGHT TAILDRAGGER',type:'prop',length:7.6,span:11.0,fuseR:0.75,engines:1,engineLoc:'nose',highWing:true,vapp:65,accent:0xE9C46A},
+ {id:'c208',code:'C208',name:'Cessna 208 Caravan',cat:'UTILITY TURBOPROP',type:'prop',length:12.7,span:15.9,fuseR:1.0,engines:1,engineLoc:'nose',highWing:true,vapp:85,accent:0xF4A261},
+ {id:'mig25',code:'MIG25',name:'MiG-25 Foxbat',cat:'SUPERSONIC INTERCEPTOR',type:'fighter',length:23.8,span:14.0,fuseR:1.4,engines:2,twinTail:true,vapp:165,accent:0x9A031E},
+ {id:'f15',code:'F15',name:'McDonnell Douglas F-15',cat:'AIR SUPERIORITY FIGHTER',type:'fighter',length:19.4,span:13.0,fuseR:1.2,engines:2,twinTail:true,vapp:150,accent:0x5F0F40},
+ {id:'f16',code:'F16',name:'General Dynamics F-16',cat:'MULTIROLE FIGHTER',type:'fighter',length:15.0,span:9.96,fuseR:1.0,engines:1,singleTail:true,vapp:145,accent:0x0F4C5C}
 ];
 
 function getScores(){
@@ -297,12 +308,12 @@ function buildAirport(){
 }
 buildAirport();
 
-/* PROCEDURAL AIRCRAFT GENERATOR */
+/* ADVANCED PROCEDURAL AIRCRAFT MESH GENERATOR */
 function buildAircraftModel(spec){
   const grp = new THREE.Group();
-  const matBody = new THREE.MeshStandardMaterial({color: 0xf0f0f0, roughness: 0.3});
+  const matBody = new THREE.MeshStandardMaterial({color: (spec.type==='fighter'||spec.type==='stealth')?0x4a535a:0xf0f0f0, roughness: 0.3});
   const matAccent = new THREE.MeshStandardMaterial({color: spec.accent, roughness: 0.3});
-  const matDark = new THREE.MeshStandardMaterial({color: 0x222222, roughness: 0.5});
+  const matDark = new THREE.MeshStandardMaterial({color: 0x15181c, roughness: 0.5});
   const matGlass = new THREE.MeshStandardMaterial({color: 0x112233, roughness: 0.1});
   const matStrut = new THREE.MeshStandardMaterial({color: 0x777777, metalness: 0.8});
 
@@ -310,14 +321,196 @@ function buildAircraftModel(spec){
   const L = spec.length;
   const W = spec.span;
 
-  // 1. Fuselage
+  // COMMON GEAR GENERATOR
+  const createGear = (x, y, z) => {
+    const gearGrp = new THREE.Group();
+    const strutGeo = new THREE.CylinderGeometry(0.1, 0.1, R * 1.2);
+    const strut = new THREE.Mesh(strutGeo, matStrut);
+    strut.position.y = -R * 0.6;
+    gearGrp.add(strut);
+
+    const wheelGeo = new THREE.CylinderGeometry(R*0.25, R*0.25, 0.2, 12);
+    wheelGeo.rotateZ(Math.PI/2);
+    
+    const wheelL = new THREE.Mesh(wheelGeo, matDark);
+    wheelL.position.set(-0.2, -R * 1.1, 0);
+    gearGrp.add(wheelL);
+
+    const wheelR = new THREE.Mesh(wheelGeo, matDark);
+    wheelR.position.set(0.2, -R * 1.1, 0);
+    gearGrp.add(wheelR);
+
+    gearGrp.position.set(x, y, z);
+    return gearGrp;
+  };
+
+  /* ---------------- TYPE 1: B-2 STEALTH FLYING WING ---------------- */
+  if(spec.type === 'stealth'){
+    const wingShape = new THREE.Shape();
+    wingShape.moveTo(0, -L*0.5);
+    wingShape.lineTo(W*0.5, L*0.1);
+    wingShape.lineTo(W*0.35, L*0.3);
+    wingShape.lineTo(W*0.2, L*0.2);
+    wingShape.lineTo(0, L*0.5);
+    wingShape.lineTo(-W*0.2, L*0.2);
+    wingShape.lineTo(-W*0.35, L*0.3);
+    wingShape.lineTo(-W*0.5, L*0.1);
+    wingShape.closePath();
+
+    const extrudeSettings = { depth: R*1.2, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.2, bevelThickness: 0.2 };
+    const wingGeo = new THREE.ExtrudeGeometry(wingShape, extrudeSettings);
+    wingGeo.rotateX(Math.PI/2);
+    const stealthMesh = new THREE.Mesh(wingGeo, matBody);
+    stealthMesh.position.y = R*0.3;
+    grp.add(stealthMesh);
+
+    // Cockpit bump
+    const glassGeo = new THREE.SphereGeometry(R*0.8, 12, 12);
+    glassGeo.scale(1, 0.4, 1.8);
+    const glass = new THREE.Mesh(glassGeo, matGlass);
+    glass.position.set(0, R*0.6, -L*0.2);
+    grp.add(glass);
+
+    grp.add(createGear(0, -R * 0.2, -L * 0.2));
+    grp.add(createGear(-W * 0.15, -R * 0.2, L * 0.05));
+    grp.add(createGear(W * 0.15, -R * 0.2, L * 0.05));
+    return grp;
+  }
+
+  /* ---------------- TYPE 2: FIGHTER JETS (F-15, F-16, MiG-25) ---------------- */
+  if(spec.type === 'fighter'){
+    // Slender Boxy/Rounded Fuselage
+    const fuseGeo = new THREE.BoxGeometry(R*1.8, R*1.2, L*0.65);
+    const body = new THREE.Mesh(fuseGeo, matBody);
+    grp.add(body);
+
+    // Sharp Cone Nose
+    const noseGeo = new THREE.ConeGeometry(R*0.9, L*0.35, 12);
+    noseGeo.rotateX(-Math.PI/2);
+    const nose = new THREE.Mesh(noseGeo, matBody);
+    nose.position.z = -L*0.5;
+    grp.add(nose);
+
+    // Bubble Canopy
+    const glassGeo = new THREE.SphereGeometry(R*0.75, 12, 12);
+    glassGeo.scale(0.8, 0.7, 2.2);
+    const glass = new THREE.Mesh(glassGeo, matGlass);
+    glass.position.set(0, R*0.6, -L*0.2);
+    grp.add(glass);
+
+    // Delta Swept Wings
+    const wingGeo = new THREE.BoxGeometry(W, R*0.1, L*0.4);
+    const wings = new THREE.Mesh(wingGeo, matBody);
+    wings.position.set(0, 0, L*0.05);
+    grp.add(wings);
+
+    // Twin or Single Vertical Tail Fins
+    if(spec.twinTail){
+      [-W*0.18, W*0.18].forEach(xPos => {
+        const finGeo = new THREE.BoxGeometry(R*0.08, R*2.0, L*0.25);
+        const fin = new THREE.Mesh(finGeo, matAccent);
+        fin.position.set(xPos, R*1.2, L*0.3);
+        fin.rotation.x = -0.3;
+        grp.add(fin);
+      });
+    } else {
+      const finGeo = new THREE.BoxGeometry(R*0.08, R*2.2, L*0.28);
+      const fin = new THREE.Mesh(finGeo, matAccent);
+      fin.position.set(0, R*1.3, L*0.3);
+      fin.rotation.x = -0.3;
+      grp.add(fin);
+    }
+
+    // Rear Jet Nozzles
+    const numEng = spec.engines || 2;
+    const offsets = numEng === 2 ? [-R*0.4, R*0.4] : [0];
+    offsets.forEach(x => {
+      const nozGeo = new THREE.CylinderGeometry(R*0.35, R*0.38, L*0.15, 12);
+      nozGeo.rotateX(Math.PI/2);
+      const noz = new THREE.Mesh(nozGeo, matDark);
+      noz.position.set(x, -R*0.1, L*0.38);
+      grp.add(noz);
+    });
+
+    grp.add(createGear(0, -R * 0.2, -L * 0.2));
+    grp.add(createGear(-W * 0.12, -R * 0.2, L * 0.05));
+    grp.add(createGear(W * 0.12, -R * 0.2, L * 0.05));
+    return grp;
+  }
+
+  /* ---------------- TYPE 3: PROPELLER / GA AIRCRAFT (Cessna, Twin Otter) ---------------- */
+  if(spec.type === 'prop'){
+    // Fuselage
+    const fuseGeo = new THREE.CylinderGeometry(R*0.9, R*0.7, L*0.7, 12);
+    fuseGeo.rotateX(Math.PI/2);
+    const body = new THREE.Mesh(fuseGeo, matBody);
+    grp.add(body);
+
+    // Nose Engine Cover
+    const noseGeo = new THREE.ConeGeometry(R*0.9, L*0.18, 12);
+    noseGeo.rotateX(-Math.PI/2);
+    const nose = new THREE.Mesh(noseGeo, matAccent);
+    nose.position.z = -L*0.44;
+    grp.add(nose);
+
+    // Front Spin Propeller Disk
+    const propGeo = new THREE.BoxGeometry(R*2.8, R*0.1, 0.05);
+    const prop = new THREE.Mesh(propGeo, matDark);
+    prop.position.z = -L*0.54;
+    grp.add(prop);
+
+    // High Wing Placement
+    const wingY = spec.highWing ? R*0.9 : -R*0.2;
+    const wingGeo = new THREE.BoxGeometry(W, R*0.1, L*0.18);
+    const wings = new THREE.Mesh(wingGeo, matBody);
+    wings.position.set(0, wingY, -L*0.05);
+    grp.add(wings);
+
+    // Cockpit Windows
+    const glassGeo = new THREE.BoxGeometry(R*1.5, R*0.8, L*0.2);
+    const glass = new THREE.Mesh(glassGeo, matGlass);
+    glass.position.set(0, R*0.4, -L*0.22);
+    grp.add(glass);
+
+    // Tail Fin & Stabilizers
+    const finGeo = new THREE.BoxGeometry(R*0.08, R*1.8, L*0.2);
+    const fin = new THREE.Mesh(finGeo, matAccent);
+    fin.position.set(0, R*1.1, L*0.3);
+    fin.rotation.x = -0.3;
+    grp.add(fin);
+
+    const hTailGeo = new THREE.BoxGeometry(W*0.3, R*0.06, L*0.12);
+    const hTail = new THREE.Mesh(hTailGeo, matBody);
+    hTail.position.set(0, R*0.2, L*0.33);
+    grp.add(hTail);
+
+    // Wing Engines for Twin Otter
+    if(spec.engines === 2){
+      [-W*0.2, W*0.2].forEach(xPos => {
+        const engGeo = new THREE.CylinderGeometry(R*0.3, R*0.3, L*0.2, 10);
+        engGeo.rotateX(Math.PI/2);
+        const eng = new THREE.Mesh(engGeo, matDark);
+        eng.position.set(xPos, wingY - R*0.3, -L*0.08);
+        grp.add(eng);
+      });
+    }
+
+    grp.add(createGear(0, -R * 0.2, -L * 0.25));
+    grp.add(createGear(-W * 0.15, -R * 0.2, L * 0.02));
+    grp.add(createGear(W * 0.15, -R * 0.2, L * 0.02));
+    return grp;
+  }
+
+  /* ---------------- TYPE 4: COMMERCIAL AIRLINERS & TRANSPORTS ---------------- */
   let bodyGeo = new THREE.CylinderGeometry(R, R, L * 0.7, 16);
+  if(spec.doubleDeck){ // Oval cross section for A380
+    bodyGeo.scale(1.0, 1.25, 1.0);
+  }
   bodyGeo.rotateX(Math.PI/2);
   const body = new THREE.Mesh(bodyGeo, matBody);
   grp.add(body);
 
-  // Beluga Bubble Hump
-  if(spec.hump){
+  if(spec.hump){ // Beluga XL
     const humpGeo = new THREE.SphereGeometry(R * 1.3, 16, 16);
     humpGeo.scale(1.0, 0.9, 2.2);
     const humpMesh = new THREE.Mesh(humpGeo, matBody);
@@ -325,8 +518,7 @@ function buildAircraftModel(spec){
     grp.add(humpMesh);
   }
 
-  // 747 Upper Deck Hump
-  if(spec.jumboHump){
+  if(spec.jumboHump){ // B747 Upper deck
     const jumboGeo = new THREE.CylinderGeometry(R*0.9, R*1.05, L * 0.3, 16);
     jumboGeo.rotateX(Math.PI/2);
     const jumboMesh = new THREE.Mesh(jumboGeo, matBody);
@@ -334,34 +526,29 @@ function buildAircraftModel(spec){
     grp.add(jumboMesh);
   }
 
-  // 2. Nose Cone
   const noseGeo = new THREE.ConeGeometry(R, L * 0.16, 16);
   noseGeo.rotateX(-Math.PI/2);
   const nose = new THREE.Mesh(noseGeo, matBody);
   nose.position.z = -L * 0.35 - (L * 0.08);
   grp.add(nose);
 
-  // 3. Cockpit Glass
   const glassGeo = new THREE.SphereGeometry(R * 0.8, 12, 12, 0, Math.PI*2, 0, Math.PI*0.4);
   const glass = new THREE.Mesh(glassGeo, matGlass);
   const glassY = (spec.hump || spec.jumboHump) ? R * 0.9 : R * 0.25;
   glass.position.set(0, glassY, -L * 0.32);
   grp.add(glass);
 
-  // 4. Tail Cone
   const tailConeGeo = new THREE.ConeGeometry(R, L * 0.15, 16);
   tailConeGeo.rotateX(Math.PI/2);
   const tailCone = new THREE.Mesh(tailConeGeo, matBody);
   tailCone.position.z = L * 0.35 + (L * 0.075);
   grp.add(tailCone);
 
-  // 5. Main Swept Wings
   const wingGeo = new THREE.BoxGeometry(W, R * 0.12, L * 0.18);
   const wings = new THREE.Mesh(wingGeo, matBody);
   wings.position.set(0, -R * 0.2, 0);
   grp.add(wings);
 
-  // 6. Vertical Tail Fin
   const finY = spec.ttail ? R * 2.5 : R * 1.4;
   const finGeo = new THREE.BoxGeometry(R * 0.12, R * (spec.ttail ? 2.8 : 2.2), L * 0.16);
   const fin = new THREE.Mesh(finGeo, matAccent);
@@ -369,13 +556,11 @@ function buildAircraftModel(spec){
   fin.rotation.x = -0.35;
   grp.add(fin);
 
-  // Horizontal Stabilizers
   const hTailGeo = new THREE.BoxGeometry(W * 0.35, R * 0.08, L * 0.1);
   const hTail = new THREE.Mesh(hTailGeo, matBody);
   hTail.position.set(0, spec.ttail ? R * 3.6 : R * 0.4, L * 0.38);
   grp.add(hTail);
 
-  // 7. Engine Configurations
   if(spec.engineLoc === 'wing'){
     const engPositions = spec.engines === 4 
       ? [-W*0.35, -W*0.18, W*0.18, W*0.35]
@@ -389,7 +574,7 @@ function buildAircraftModel(spec){
       grp.add(eng);
     });
   } else if(spec.engineLoc === 'rear'){
-    [-R*1.2, R*1.2].forEach(xPos => {
+    [-R*1.2, R*1.2].slice(0, spec.engines).forEach(xPos => {
       const engGeo = new THREE.CylinderGeometry(R*0.35, R*0.35, L*0.12, 12);
       engGeo.rotateX(Math.PI/2);
       const eng = new THREE.Mesh(engGeo, matDark);
@@ -410,29 +595,6 @@ function buildAircraftModel(spec){
     centerEng.position.set(0, R * 1.6, L * 0.3);
     grp.add(centerEng);
   }
-
-  // 8. LANDING GEAR SYSTEM
-  const createGear = (x, y, z) => {
-    const gearGrp = new THREE.Group();
-    const strutGeo = new THREE.CylinderGeometry(0.12, 0.12, R * 1.2);
-    const strut = new THREE.Mesh(strutGeo, matStrut);
-    strut.position.y = -R * 0.6;
-    gearGrp.add(strut);
-
-    const wheelGeo = new THREE.CylinderGeometry(R*0.3, R*0.3, 0.25, 12);
-    wheelGeo.rotateZ(Math.PI/2);
-    
-    const wheelL = new THREE.Mesh(wheelGeo, matDark);
-    wheelL.position.set(-0.2, -R * 1.1, 0);
-    gearGrp.add(wheelL);
-
-    const wheelR = new THREE.Mesh(wheelGeo, matDark);
-    wheelR.position.set(0.2, -R * 1.1, 0);
-    gearGrp.add(wheelR);
-
-    gearGrp.position.set(x, y, z);
-    return gearGrp;
-  };
 
   grp.add(createGear(0, -R * 0.2, -L * 0.25));
   grp.add(createGear(-W * 0.12, -R * 0.2, L * 0.05));
@@ -469,7 +631,6 @@ function initTouchControls() {
   let joyTouchId = null;
   let joyCenter = { x: 0, y: 0 };
 
-  // Virtual Joystick Events
   joyZone.addEventListener('touchstart', e => {
     e.preventDefault();
     if (joyTouchId !== null) return;
@@ -513,7 +674,6 @@ function initTouchControls() {
   window.addEventListener('touchend', resetJoy);
   window.addEventListener('touchcancel', resetJoy);
 
-  // Virtual Throttle Control
   let throttleTouchId = null;
   throttleZone.addEventListener('touchstart', e => {
     e.preventDefault();
@@ -543,17 +703,14 @@ function initTouchControls() {
 
   function updateThrottlePos(touch) {
     const rect = throttleZone.getBoundingClientRect();
-    // Correct Direction: Top = 100%, Bottom = 0%
     let val = (rect.bottom - touch.clientY) / rect.height;
     val = Math.max(0, Math.min(1, val));
     AC.throttle = val * 100;
     
-    // UI Knob positioning: Top = 0px, Bottom = Max offset
     const knobY = (1 - val) * (rect.height - 38);
     throttleKnob.style.transform = `translateY(${knobY}px)`;
   }
 
-  // Buttons
   document.getElementById('tBtnCam').addEventListener('click', () => {
     if(simState !== 'idle') cameraMode = (cameraMode + 1) % 2;
   });
@@ -570,7 +727,6 @@ function resetSim(spec){
   AC.throttle = 45; AC.phase = 'approach';
   simState = 'flying';
   
-  // Set default throttle slider position (45%)
   const throttleZone = document.getElementById('throttleZone');
   if(throttleZone){
     const rectHeight = throttleZone.getBoundingClientRect().height || 160;
@@ -588,7 +744,6 @@ function updatePhysics(dt){
   if(keys['KeyW']) AC.throttle = Math.min(100, AC.throttle + 25 * dt);
   if(keys['KeyS']) AC.throttle = Math.max(0, AC.throttle - 30 * dt);
 
-  // Sync throttle slider visual when using keyboard W/S keys
   if (keys['KeyW'] || keys['KeyS']) {
     const throttleZone = document.getElementById('throttleZone');
     if (throttleZone) {
