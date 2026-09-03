@@ -53,22 +53,22 @@ button{font-family:var(--fd);cursor:pointer;}
 
 /* HUD */
 #hud{position:fixed;inset:0;z-index:15;display:none;font-family:var(--fm);pointer-events:none;}
-.hud-box{position:absolute;background:rgba(5,9,13,.8);border:1px solid var(--border);border-radius:6px;padding:8px 12px;}
+.hud-box{position:absolute;background:rgba(5,9,13,.85);border:1px solid var(--border);border-radius:6px;padding:8px 12px;}
 #topLeft{top:14px;left:14px;}
 #topCenter{top:14px;left:50%;transform:translateX(-50%);text-align:center;}
 #topCenter b{color:var(--cyan);font-size:15px;margin:0 4px;}
-#topRight{top:14px;right:14px;text-align:right;}
+#topRight{top:14px;right:180px;text-align:right;}
 #topRight span{display:inline-block;padding:2px 6px;border-radius:3px;font-weight:700;font-size:11px;}
 .status-off{background:#25333f;color:var(--text-dim);}
 .status-active{background:var(--amber);color:#000;}
 .status-rev{background:var(--red);color:#fff;}
 #taxiDirective{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(12,19,27,0.9);border:2px solid var(--amber);padding:10px 24px;border-radius:30px;color:var(--amber);font-size:16px;font-weight:700;display:none;text-align:center;width:90%;max-width:400px;}
 
-/* ATC POPUP WINDOW */
-#atcWindow{position:absolute;top:60px;left:50%;transform:translateX(-50%);background:rgba(12,19,27,0.95);border:2px solid var(--cyan);border-radius:10px;padding:12px 20px;color:var(--text);display:none;pointer-events:auto;text-align:center;box-shadow:0 0 15px rgba(79,216,255,0.3);z-index:18;max-width:90vw;}
-#atcMsg{font-size:14px;margin-bottom:10px;color:var(--text-dim);}
+/* ATC POPUP WINDOW (PROMINENT TOP BANNER) */
+#atcWindow{position:absolute;top:65px;left:50%;transform:translateX(-50%);background:rgba(12,19,27,0.95);border:2px solid var(--cyan);border-radius:10px;padding:12px 24px;color:var(--text);display:block;pointer-events:auto;text-align:center;box-shadow:0 0 20px rgba(79,216,255,0.4);z-index:25;min-width:320px;}
+#atcMsg{font-size:15px;margin-bottom:10px;color:var(--text);}
 #atcMsg b{color:var(--cyan);}
-.atc-btn{background:var(--cyan);color:#000;font-family:var(--fm);font-size:12px;font-weight:700;padding:8px 16px;border-radius:4px;cursor:pointer;}
+.atc-btn{background:var(--cyan);color:#000;font-family:var(--fm);font-size:13px;font-weight:800;padding:8px 18px;border-radius:6px;border:none;cursor:pointer;}
 .atc-btn:hover{background:var(--amber);}
 
 /* TOUCH CONTROLS OVERLAY */
@@ -85,12 +85,12 @@ button{font-family:var(--fd);cursor:pointer;}
 .throttle-knob{width:50px;height:50px;background:var(--amber);border-radius:50%;box-shadow:0 0 12px rgba(255,176,32,0.6);pointer-events:none;}
 .throttle-label{position:absolute;top:-22px;font-family:var(--fm);font-size:10px;color:var(--amber);font-weight:700;}
 
-.touch-btn-group{position:absolute;top:14px;right:14px;display:flex;gap:10px;pointer-events:auto;}
-.t-btn{background:rgba(12,19,27,0.8);border:1px solid var(--cyan);color:var(--cyan);font-family:var(--fm);font-size:12px;font-weight:700;padding:8px 12px;border-radius:6px;min-width:44px;min-height:44px;}
+.touch-btn-group{position:absolute;top:14px;right:14px;display:flex;gap:8px;pointer-events:auto;z-index:20;}
+.t-btn{background:rgba(12,19,27,0.85);border:1px solid var(--cyan);color:var(--cyan);font-family:var(--fm);font-size:12px;font-weight:700;padding:8px 12px;border-radius:6px;min-width:44px;min-height:44px;}
 .t-btn.active{background:var(--red);color:#fff;border-color:var(--red);}
 
 /* RESULTS */
-#results{position:fixed;inset:0;z-index:25;display:none;align-items:center;justify-content:center;background:rgba(2,4,7,.88);}
+#results{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;background:rgba(2,4,7,.88);}
 .card{width:min(460px,90vw);background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;}
 .card .grade{font-weight:800;font-size:36px;text-transform:uppercase;}
 .card-actions{display:flex;gap:10px;justify-content:center;margin-top:16px;}
@@ -103,9 +103,10 @@ button{font-family:var(--fd);cursor:pointer;}
   .hero-top h1{font-size:28px;}
   .hero-bottom{display:none;}
   .center-stage{padding:12px;}
-  #topLeft{top: auto; bottom: 180px; left: 14px;}
-  #topCenter{top: 14px; width: auto;}
-  #topRight{top: 60px; right: 14px;}
+  #topLeft{display:none;}
+  #topCenter{top: 10px; font-size: 11px;}
+  #topRight{top: 10px; right: 160px;}
+  #atcWindow{top: 55px; width: 90vw;}
   .joystick-zone{bottom:20px;left:20px;width:110px;height:110px;}
   .joystick-knob{width:40px;height:40px;margin-top:-20px;margin-left:-20px;}
   .throttle-container{bottom:20px;right:20px;height:150px;width:60px;}
@@ -168,7 +169,7 @@ button{font-family:var(--fd);cursor:pointer;}
   
   <!-- ATC POPUP -->
   <div id="atcWindow">
-    <div id="atcMsg">TOWER: Request clearance to land on RWY 27.</div>
+    <div id="atcMsg"><b>TOWER:</b> Request clearance to land on RWY 27.</div>
     <button class="atc-btn" id="atcBtn">Request Clearance (L)</button>
   </div>
 </div>
@@ -206,7 +207,8 @@ button{font-family:var(--fd);cursor:pointer;}
 "use strict";
 
 const RUNWAY_LENGTH = 2500, RUNWAY_WIDTH = 45;
-const SPAWN_DIST = 3200, SPAWN_ALT = 200;
+/* SPAWN CLOSER SO AIRPORT AND TOWER ARE IMMEDIATELY VISIBLE */
+const SPAWN_DIST = 1000, SPAWN_ALT = 80;
 
 /* Fleet Array */
 const AIRCRAFT = [
@@ -226,15 +228,15 @@ const AIRCRAFT = [
  {id:'b767',code:'B767',name:'Boeing 767-400ER',cat:'WIDE-BODY',type:'liner',length:61.3,span:51.9,fuseR:2.5,engines:2,engineLoc:'wing',vapp:140,accent:0x0072BB},
  {id:'b777',code:'B777',name:'Boeing 777-300ER',cat:'FLAGSHIP WIDE-BODY',type:'liner',length:73.9,span:64.8,fuseR:3.1,engines:2,engineLoc:'wing',vapp:145,accent:0x1D3557},
  {id:'b787',code:'B787',name:'Boeing 787-10',cat:'DREAMLINER',type:'liner',length:68.3,span:60.1,fuseR:2.9,engines:2,engineLoc:'wing',vapp:143,accent:0x118AB2},
- {id:'b2',code:'B2',name:'Northrop B-2 Spirit',cat:'STEALTH BOMBER',type:'stealth',length:21.0,span:52.4,fuseR:1.2,engines:4,vapp:260,accent:0x2B2D42},
+ {id:'b2',code:'B2',name:'Northrop B-2 Spirit',cat:'STEALTH BOMBER',type:'stealth',length:21.0,span:52.4,fuseR:1.2,engines:4,vapp:140,accent:0x2B2D42},
  {id:'dhc6',code:'DHC6',name:'DHC-6 Twin Otter',cat:'STOL UTILITY',type:'prop',length:15.8,span:19.8,fuseR:1.1,engines:2,engineLoc:'wing',highWing:true,vapp:80,accent:0xE76F51},
  {id:'c150',code:'C150',name:'Cessna 150',cat:'LIGHT TRAINER',type:'prop',length:7.3,span:10.2,fuseR:0.7,engines:1,engineLoc:'nose',highWing:true,vapp:60,accent:0x2A9D8F},
  {id:'c170',code:'C170',name:'Cessna 170',cat:'LIGHT TAILDRAGGER',type:'prop',length:7.6,span:11.0,fuseR:0.75,engines:1,engineLoc:'nose',highWing:true,vapp:65,accent:0xE9C46A},
  {id:'c208',code:'C208',name:'Cessna 208 Caravan',cat:'UTILITY TURBOPROP',type:'prop',length:12.7,span:15.9,fuseR:1.0,engines:1,engineLoc:'nose',highWing:true,vapp:85,accent:0xF4A261},
- {id:'mig25',code:'MIG25',name:'MiG-25 Foxbat',cat:'SUPERSONIC INTERCEPTOR',type:'fighter',length:23.8,span:14.0,fuseR:1.4,engines:2,twinTail:true,vapp:320,accent:0x9A031E},
- {id:'f15',code:'F15',name:'McDonnell Douglas F-15',cat:'AIR SUPERIORITY FIGHTER',type:'fighter',length:19.4,span:13.0,fuseR:1.2,engines:2,twinTail:true,vapp:290,accent:0x5F0F40},
- {id:'f16',code:'F16',name:'General Dynamics F-16',cat:'MULTIROLE FIGHTER',type:'fighter',length:15.0,span:9.96,fuseR:1.0,engines:1,singleTail:true,vapp:280,accent:0x0F4C5C},
- {id:'sr71',code:'SR71',name:'Lockheed SR-71 Blackbird',cat:'STRATEGIC RECON',type:'fighter',length:32.7,span:16.9,fuseR:1.5,engines:2,twinTail:true,vapp:350,accent:0x1a1a1a}
+ {id:'mig25',code:'MIG25',name:'MiG-25 Foxbat',cat:'SUPERSONIC INTERCEPTOR',type:'fighter',length:23.8,span:14.0,fuseR:1.4,engines:2,twinTail:true,vapp:160,accent:0x9A031E},
+ {id:'f15',code:'F15',name:'McDonnell Douglas F-15',cat:'AIR SUPERIORITY FIGHTER',type:'fighter',length:19.4,span:13.0,fuseR:1.2,engines:2,twinTail:true,vapp:150,accent:0x5F0F40},
+ {id:'f16',code:'F16',name:'General Dynamics F-16',cat:'MULTIROLE FIGHTER',type:'fighter',length:15.0,span:9.96,fuseR:1.0,engines:1,singleTail:true,vapp:145,accent:0x0F4C5C},
+ {id:'sr71',code:'SR71',name:'Lockheed SR-71 Blackbird',cat:'STRATEGIC RECON',type:'fighter',length:32.7,span:16.9,fuseR:1.5,engines:2,twinTail:true,vapp:165,accent:0x1a1a1a}
 ];
 
 function getScores(){
@@ -258,7 +260,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xa0c4e2);
-scene.fog = new THREE.FogExp2(0xa0c4e2, 0.00015);
+scene.fog = new THREE.FogExp2(0xa0c4e2, 0.0001);
 
 const camera = new THREE.PerspectiveCamera(55, window.innerWidth/window.innerHeight, 0.5, 20000);
 
@@ -332,24 +334,24 @@ function buildAirport(){
   taxiLine.position.set(120, 0.03, -1200);
   ap.add(taxiLine);
 
-  // Terminal Building
-  const mainTerminal = new THREE.Mesh(new THREE.BoxGeometry(70, 24, 300), new THREE.MeshStandardMaterial({color:0x7a8b9e, roughness:0.3}));
-  mainTerminal.position.set(200, 12, -1200);
+  // Main Airport Terminal Building
+  const mainTerminal = new THREE.Mesh(new THREE.BoxGeometry(80, 26, 350), new THREE.MeshStandardMaterial({color:0x7a8b9e, roughness:0.3}));
+  mainTerminal.position.set(200, 13, -1200);
   ap.add(mainTerminal);
 
-  // 3D ATC Control Tower Scenery Structure
+  // High-Visibility ATC Control Tower Structure
   const towerBase = new THREE.Mesh(
-    new THREE.CylinderGeometry(8, 12, 80, 16),
-    new THREE.MeshStandardMaterial({color: 0x556677, roughness: 0.5})
+    new THREE.CylinderGeometry(10, 14, 90, 16),
+    new THREE.MeshStandardMaterial({color: 0xeeeeee, roughness: 0.4})
   );
-  towerBase.position.set(260, 40, -1200);
+  towerBase.position.set(260, 45, -1200);
   ap.add(towerBase);
 
   const towerGlass = new THREE.Mesh(
-    new THREE.CylinderGeometry(14, 10, 16, 12),
+    new THREE.CylinderGeometry(18, 12, 20, 12),
     new THREE.MeshStandardMaterial({color: 0x4fd8ff, roughness: 0.1, metalness: 0.8})
   );
-  towerGlass.position.set(260, 88, -1200);
+  towerGlass.position.set(260, 100, -1200);
   ap.add(towerGlass);
 
   // Gates and Passenger Bridges
