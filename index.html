@@ -14,8 +14,8 @@
   --green:#35e08a; --red:#ff4d4d; --fd:'Barlow Condensed',sans-serif; --fm:'JetBrains Mono',monospace;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:var(--void);font-family:var(--fd);color:var(--text);}
-canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;}
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:var(--void);font-family:var(--fd);color:var(--text);touch-action:none;}
+canvas#scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;}
 button{font-family:var(--fd);cursor:pointer;}
 
 /* MENU & LEADERBOARD */
@@ -74,15 +74,15 @@ button{font-family:var(--fd);cursor:pointer;}
 /* TOUCH CONTROLS OVERLAY */
 #touchControls{position:fixed;inset:0;z-index:16;display:none;pointer-events:none;}
 
-@media (pointer: coarse) {
+@media (pointer: coarse), (max-width: 1024px) {
   #touchControls{display:block;}
 }
 
 .joystick-zone{position:absolute;bottom:30px;left:30px;width:130px;height:130px;background:rgba(255,255,255,0.05);border:2px dashed rgba(79,216,255,0.4);border-radius:50%;pointer-events:auto;touch-action:none;}
 .joystick-knob{position:absolute;top:50%;left:50%;width:50px;height:50px;margin-top:-25px;margin-left:-25px;background:rgba(79,216,255,0.6);border:2px solid var(--cyan);border-radius:50%;pointer-events:none;transform:translate(0,0);}
 
-.throttle-container{position:absolute;bottom:30px;right:30px;width:50px;height:160px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:25px;pointer-events:auto;touch-action:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px;}
-.throttle-knob{width:38px;height:38px;background:var(--amber);border-radius:50%;box-shadow:0 0 10px rgba(255,176,32,0.5);}
+.throttle-container{position:absolute;bottom:30px;right:30px;width:70px;height:180px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:35px;pointer-events:auto;touch-action:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:10px 0;}
+.throttle-knob{width:50px;height:50px;background:var(--amber);border-radius:50%;box-shadow:0 0 12px rgba(255,176,32,0.6);pointer-events:none;}
 .throttle-label{position:absolute;top:-22px;font-family:var(--fm);font-size:10px;color:var(--amber);font-weight:700;}
 
 .touch-btn-group{position:absolute;top:14px;right:14px;display:flex;gap:10px;pointer-events:auto;}
@@ -108,8 +108,8 @@ button{font-family:var(--fd);cursor:pointer;}
   #topRight{top: 60px; right: 14px;}
   .joystick-zone{bottom:20px;left:20px;width:110px;height:110px;}
   .joystick-knob{width:40px;height:40px;margin-top:-20px;margin-left:-20px;}
-  .throttle-container{bottom:20px;right:20px;height:130px;width:44px;}
-  .throttle-knob{width:32px;height:32px;}
+  .throttle-container{bottom:20px;right:20px;height:150px;width:60px;}
+  .throttle-knob{width:42px;height:42px;}
 }
 </style>
 </head>
@@ -382,7 +382,6 @@ function buildAircraftModel(spec){
 
   // 1. FUSELAGE / BODY
   if(spec.type === 'stealth'){
-    // B-2 Flying Wing style
     const shape = new THREE.Shape();
     shape.moveTo(0, -L*0.5);
     shape.lineTo(W*0.5, L*0.2);
@@ -401,13 +400,11 @@ function buildAircraftModel(spec){
     grp.add(bodyMesh);
 
   } else if(spec.type === 'fighter'){
-    // Sleek Jet Fighter Body
     const bodyGeo = new THREE.ConeGeometry(R*1.1, L, 16);
     bodyGeo.rotateX(Math.PI/2);
     const bodyMesh = new THREE.Mesh(bodyGeo, matBody);
     grp.add(bodyMesh);
 
-    // Glass Canopy
     const canopyGeo = new THREE.SphereGeometry(R*0.8, 16, 16);
     canopyGeo.scale(0.8, 0.7, 2.2);
     const canopy = new THREE.Mesh(canopyGeo, matGlass);
@@ -415,35 +412,30 @@ function buildAircraftModel(spec){
     grp.add(canopy);
 
   } else {
-    // Commercial Liner & Turboprop Fuselage
     const mainBodyLen = L * 0.75;
     const bodyGeo = new THREE.CylinderGeometry(R, R, mainBodyLen, 24);
     bodyGeo.rotateX(Math.PI/2);
     const bodyMesh = new THREE.Mesh(bodyGeo, matBody);
     grp.add(bodyMesh);
 
-    // Nose Cone
     const noseGeo = new THREE.SphereGeometry(R, 24, 16);
     noseGeo.scale(1, 0.95, 1.8);
     const nose = new THREE.Mesh(noseGeo, matBody);
     nose.position.z = -mainBodyLen/2;
     grp.add(nose);
 
-    // Tail Cone
     const tailConeGeo = new THREE.ConeGeometry(R, L*0.25, 24);
     tailConeGeo.rotateX(-Math.PI/2);
     const tailCone = new THREE.Mesh(tailConeGeo, matBody);
     tailCone.position.z = mainBodyLen/2 + (L*0.125);
     grp.add(tailCone);
 
-    // Cockpit Windows Ring
     const windowGeo = new THREE.SphereGeometry(R*1.01, 16, 16, 0, Math.PI*2, 0, Math.PI*0.35);
     windowGeo.scale(0.98, 0.6, 0.9);
     const cockpit = new THREE.Mesh(windowGeo, matGlass);
     cockpit.position.set(0, R*0.35, -mainBodyLen/2 + R*0.2);
     grp.add(cockpit);
 
-    // Jumbo Hump (B747 / Beluga)
     if(spec.jumboHump || spec.hump){
       const humpLen = spec.hump ? L*0.5 : L*0.35;
       const humpR = spec.hump ? R*1.3 : R*1.15;
@@ -455,7 +447,7 @@ function buildAircraftModel(spec){
     }
   }
 
-  // 2. MAIN WINGS (Swept Wing Geometry)
+  // 2. MAIN WINGS
   if(spec.type !== 'stealth'){
     const wingY = spec.highWing ? R*0.8 : -R*0.25;
     const isFighter = spec.type === 'fighter';
@@ -482,7 +474,6 @@ function buildAircraftModel(spec){
     leftWing.position.set(0, wingY, 0);
     grp.add(leftWing);
 
-    // Winglets (For Liners)
     if(spec.type === 'liner'){
       const wingletGeo = new THREE.BoxGeometry(R*0.08, R*1.2, L*0.08);
       const wL = new THREE.Mesh(wingletGeo, matAccent);
@@ -502,7 +493,6 @@ function buildAircraftModel(spec){
     const tailZ = L * 0.38;
     const finHeight = R * (spec.ttail ? 2.8 : 2.2);
 
-    // Vertical Stabilizer / Fin
     if(spec.twinTail){
       const finGeo = new THREE.BoxGeometry(R*0.1, R*2.0, L*0.15);
       const finL = new THREE.Mesh(finGeo, matAccent);
@@ -521,7 +511,6 @@ function buildAircraftModel(spec){
       grp.add(fin);
     }
 
-    // Horizontal Tail Stabilizers
     const stabW = W * 0.35;
     const stabY = spec.ttail ? R*0.7 + finHeight : R*0.1;
     const stabGeo = new THREE.BoxGeometry(stabW, R*0.08, L*0.12);
@@ -541,21 +530,18 @@ function buildAircraftModel(spec){
     const nacelle = new THREE.Mesh(nacelleGeo, matBody);
     engineGrp.add(nacelle);
 
-    // Intake Rim / Fan
     const intakeGeo = new THREE.CylinderGeometry(engR*0.85, engR*0.85, engL*0.1, 16);
     intakeGeo.rotateX(Math.PI/2);
     const intake = new THREE.Mesh(intakeGeo, matEngineDark);
     intake.position.z = -engL*0.48;
     engineGrp.add(intake);
 
-    // Exhaust Cone
     const exhaustGeo = new THREE.ConeGeometry(engR*0.7, engL*0.3, 16);
     exhaustGeo.rotateX(-Math.PI/2);
     const exhaust = new THREE.Mesh(exhaustGeo, matEngineDark);
     exhaust.position.z = engL*0.5;
     engineGrp.add(exhaust);
 
-    // Pylon Connector
     const pylonGeo = new THREE.BoxGeometry(R*0.06, R*0.4, engL*0.6);
     const pylon = new THREE.Mesh(pylonGeo, matDark);
     pylon.position.y = R*0.25;
@@ -583,7 +569,6 @@ function buildAircraftModel(spec){
     addEngine(-R*1.1, R*0.2, L*0.25, 0.8);
     addEngine(0, R*1.6, L*0.3, 0.8);
   } else if(spec.engineLoc === 'nose'){
-    // Single Propeller Plane (Cessna style)
     const spinnerGeo = new THREE.ConeGeometry(R*0.5, L*0.08, 16);
     spinnerGeo.rotateX(-Math.PI/2);
     const spinner = new THREE.Mesh(spinnerGeo, matAccent);
@@ -687,11 +672,22 @@ function toggleReverseThrust(){
   }
 }
 
+function updateThrottleUI() {
+  const throttleZone = document.getElementById('throttleZone');
+  const throttleKnob = document.getElementById('throttleKnob');
+  if (throttleZone && throttleKnob) {
+    const knobH = throttleKnob.offsetHeight || 50;
+    const totalH = throttleZone.clientHeight || 180;
+    const maxTravel = Math.max(1, totalH - knobH);
+    const knobY = (1 - (AC.throttle / 100)) * maxTravel;
+    throttleKnob.style.transform = `translateY(${knobY}px)`;
+  }
+}
+
 function initTouchControls() {
   const joyZone = document.getElementById('joyZone');
   const joyKnob = document.getElementById('joyKnob');
   const throttleZone = document.getElementById('throttleZone');
-  const throttleKnob = document.getElementById('throttleKnob');
   
   let joyTouchId = null;
   let joyCenter = { x: 0, y: 0 };
@@ -710,6 +706,7 @@ function initTouchControls() {
     for (let i = 0; i < e.changedTouches.length; i++) {
       const touch = e.changedTouches[i];
       if (touch.identifier === joyTouchId) {
+        e.preventDefault();
         const dx = touch.clientX - joyCenter.x;
         const dy = touch.clientY - joyCenter.y;
         const maxDist = 40;
@@ -740,31 +737,45 @@ function initTouchControls() {
   window.addEventListener('touchcancel', resetJoy);
 
   let throttleTouchId = null;
+
+  function updateThrottlePos(touch) {
+    const rect = throttleZone.getBoundingClientRect();
+    const knobH = 50;
+    const topEdge = rect.top + (knobH / 2);
+    const bottomEdge = rect.bottom - (knobH / 2);
+    
+    let val = (bottomEdge - touch.clientY) / (bottomEdge - topEdge);
+    val = Math.max(0, Math.min(1, val));
+    AC.throttle = val * 100;
+    updateThrottleUI();
+  }
+
   throttleZone.addEventListener('touchstart', e => {
     e.preventDefault();
-    if(throttleTouchId !== null) return;
-    throttleTouchId = e.changedTouches[0].identifier;
-    updateThrottlePos(e.changedTouches[0]);
+    const touch = e.changedTouches[0];
+    throttleTouchId = touch.identifier;
+    updateThrottlePos(touch);
   }, {passive: false});
 
   window.addEventListener('touchmove', e => {
     if (throttleTouchId === null) return;
     for (let i = 0; i < e.changedTouches.length; i++) {
       if (e.changedTouches[i].identifier === throttleTouchId) {
+        e.preventDefault();
         updateThrottlePos(e.changedTouches[i]);
       }
     }
   }, {passive: false});
 
-  function updateThrottlePos(touch) {
-    const rect = throttleZone.getBoundingClientRect();
-    let val = (rect.bottom - touch.clientY) / rect.height;
-    val = Math.max(0, Math.min(1, val));
-    AC.throttle = val * 100;
-    
-    const knobY = (1 - val) * (rect.height - 38);
-    throttleKnob.style.transform = `translateY(${knobY}px)`;
-  }
+  const resetThrottleTouch = e => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+      if (e.changedTouches[i].identifier === throttleTouchId) {
+        throttleTouchId = null;
+      }
+    }
+  };
+  window.addEventListener('touchend', resetThrottleTouch);
+  window.addEventListener('touchcancel', resetThrottleTouch);
 
   document.getElementById('tBtnRev').addEventListener('click', toggleReverseThrust);
   document.getElementById('tBtnCam').addEventListener('click', () => {
@@ -798,6 +809,7 @@ function resetSim(spec){
 
   const revTag = document.getElementById('revTag');
   if(revTag) { revTag.textContent = 'OFF'; revTag.className = 'status-off'; }
+  updateThrottleUI();
 }
 
 function updatePhysics(dt){
@@ -806,14 +818,13 @@ function updatePhysics(dt){
   const pitchIn = (keys['ArrowUp'] ? 1 : 0) - (keys['ArrowDown'] ? 1 : 0) + touchInput.pitch;
   const rollIn = (keys['ArrowRight'] ? 1 : 0) - (keys['ArrowLeft'] ? 1 : 0) + touchInput.roll;
   
-  if(keys['KeyW']) AC.throttle = Math.min(100, AC.throttle + 40 * dt);
-  if(keys['KeyS']) AC.throttle = Math.max(0, AC.throttle - 40 * dt);
-
-  const throttleZone = document.getElementById('throttleZone');
-  if (throttleZone) {
-    const rectHeight = throttleZone.getBoundingClientRect().height || 160;
-    const knobY = (1 - (AC.throttle / 100)) * (rectHeight - 38);
-    document.getElementById('throttleKnob').style.transform = `translateY(${knobY}px)`;
+  if(keys['KeyW']) {
+    AC.throttle = Math.min(100, AC.throttle + 40 * dt);
+    updateThrottleUI();
+  }
+  if(keys['KeyS']) {
+    AC.throttle = Math.max(0, AC.throttle - 40 * dt);
+    updateThrottleUI();
   }
 
   AC.wheelBrakes = (AC.phase === 'taxi' && keys['KeyS']);
