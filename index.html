@@ -281,7 +281,7 @@ const ground = new THREE.Mesh(
 ground.rotation.x = -Math.PI/2;
 scene.add(ground);
 
-/* AIRPORT BUILDER */
+/* AIRPORT & SCENERY BUILDER */
 function buildAirport(){
   const ap = new THREE.Group();
   
@@ -308,6 +308,7 @@ function buildAirport(){
     parent.add(group);
   };
 
+  // Runways
   const rwy1 = new THREE.Mesh(new THREE.PlaneGeometry(RUNWAY_WIDTH, RUNWAY_LENGTH), matRwy);
   rwy1.rotation.x = -Math.PI/2;
   rwy1.position.set(0, 0.02, -RUNWAY_LENGTH/2);
@@ -320,6 +321,7 @@ function buildAirport(){
   ap.add(rwy2);
   addRunwayStripes(ap, RUNWAY_WIDTH, RUNWAY_LENGTH, 0, 400, -RUNWAY_LENGTH/2);
 
+  // Taxiways
   const taxiMain = new THREE.Mesh(new THREE.PlaneGeometry(22, 1600), matTaxi);
   taxiMain.rotation.x = -Math.PI/2;
   taxiMain.position.set(120, 0.02, -1200);
@@ -330,10 +332,27 @@ function buildAirport(){
   taxiLine.position.set(120, 0.03, -1200);
   ap.add(taxiLine);
 
+  // Terminal Building
   const mainTerminal = new THREE.Mesh(new THREE.BoxGeometry(70, 24, 300), new THREE.MeshStandardMaterial({color:0x7a8b9e, roughness:0.3}));
   mainTerminal.position.set(200, 12, -1200);
   ap.add(mainTerminal);
 
+  // 3D ATC Control Tower Scenery Structure
+  const towerBase = new THREE.Mesh(
+    new THREE.CylinderGeometry(8, 12, 80, 16),
+    new THREE.MeshStandardMaterial({color: 0x556677, roughness: 0.5})
+  );
+  towerBase.position.set(260, 40, -1200);
+  ap.add(towerBase);
+
+  const towerGlass = new THREE.Mesh(
+    new THREE.CylinderGeometry(14, 10, 16, 12),
+    new THREE.MeshStandardMaterial({color: 0x4fd8ff, roughness: 0.1, metalness: 0.8})
+  );
+  towerGlass.position.set(260, 88, -1200);
+  ap.add(towerGlass);
+
+  // Gates and Passenger Bridges
   const gatePositions = [
     {id: 1, x: 140, z: -1320},
     {id: 2, x: 140, z: -1260},
